@@ -1,0 +1,17 @@
+{
+  "name": "turkanimetv-dl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^13.5.2",
+    "puppeteer-extra": "^3.2.3",
+    "puppeteer-extra-plugin-user-preferences": "^2.3.1"
+  }
+}
