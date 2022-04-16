@@ -1,5 +1,18 @@
-function startEverything(link) {
 
+
+async function startEverything(link) {
+
+  const {
+    JsonDatabase,
+    YamlDatabase
+} = require("wio.db");
+
+const db = new JsonDatabase({
+  databasePath:"../db.json"
+});
+
+  let chalk_base = await import("chalk");
+  const chalk = chalk_base.default;
   let currentIndex = -1
 
   async function init() {
@@ -29,19 +42,13 @@ function startEverything(link) {
           if (interceptedRequest.isInterceptResolutionHandled()) return;
 
           if (interceptedRequest.url().includes(".mp4")) {
-            const http = require('node:https')
-            const fs = require('node:fs')
-            const file = fs.createWriteStream(currentIndex + ".mp4");
-            const request = http.get(interceptedRequest.url(), async function (response) {
-              response.pipe(file);
-              await browser.close()
-
-              file.on("finish", () => {
-                file.close();
-                console.log("yüklendi itşe.");
-              });
+            console.log(chalk.green("Uygun oynatıcı bulundu video veritabanına kaydediliyor..."))
+            if(interceptedRequest.url().startsWith("https://")) {
+              db.set(link[currentIndex].replace("https://www.turkanime.co/video/", ""), interceptedRequest.url())
+            }
+              await browser.close()  
+              console.log(chalk.yellow("Veritabanına kaydedildi"))
               init()
-            });
           }
 
 
@@ -75,6 +82,7 @@ function startEverything(link) {
 
         
   const getData = async() => {
+    console.log(chalk.blue("Uygun oynatıcı bulma işlemi başlatıldı..."))
     return await page.evaluate(async () => {
         return await new Promise(resolve => {
           let get2 = document.querySelector("#videodetay > div > div.pull-right")
@@ -145,12 +153,17 @@ function startEverything(link) {
 
   
   boxes2 = await getData();
-  let filterIt = boxes2.filter(x => x.players.includes("fembed") || x.players.includes("hdvid") || x.players.includes("anavids"))
+  let filterIt = boxes2.filter(x => x.players.includes("fembed"))
   let index = boxes2.indexOf(filterIt[0])
-  await page.evaluate(async(index) => {
+  let index2 = boxes2[index].players.indexOf("fembed")
+  await page.evaluate(async(index, index2) => {
     let select = document.querySelector(`#videodetay > div > div.btn-group.pull-right > button:nth-child(${index+1})`)
     select.click()
-  }, index)
+    setTimeout(() => {
+      let select2 = document.querySelector(`#videodetay > div > div:nth-child(4) > button:nth-child(${index2+1})`)
+      select2.click()
+    }, 1000);
+  }, index, index2)
   console.log(filterIt)
 
 
@@ -163,4 +176,4 @@ function startEverything(link) {
   init()
 }
 
-startEverything(["https://www.turkanime.co/video/gotoubun-no-hanayome-1-bolum"])
+startEverything([`https://www.turkanime.co/video/gotoubun-no-hanayome-1-bolum`])

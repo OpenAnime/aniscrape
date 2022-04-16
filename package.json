@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^5.0.1",
     "puppeteer": "^13.5.2",
     "puppeteer-extra": "^3.2.3",
-    "puppeteer-extra-plugin-user-preferences": "^2.3.1"
+    "puppeteer-extra-plugin-user-preferences": "^2.3.1",
+    "wio.db": "^4.0.22"
   }
 }
