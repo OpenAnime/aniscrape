@@ -69,7 +69,85 @@ function startEverything(link) {
         console.log(link[currentIndex])
         var eval = await page.evaluate(async () => {
           console.clear = () => {}
-        }, fansubNames)
+
+        })
+
+
+        
+  const getData = async() => {
+    return await page.evaluate(async () => {
+        return await new Promise(resolve => {
+          let get2 = document.querySelector("#videodetay > div > div.pull-right")
+          let nodes1 = get2.childNodes
+          
+          let currentNode = 0
+          var res = []
+          let inner1 = []
+          let turn = false
+          
+          setInterval(() => {
+              try{
+              nodes1[currentNode].click()     
+                  setTimeout(() => {
+                      
+              let get = document.querySelector("#videodetay > div > div:nth-child(4)")
+                          inner1.push(get.innerHTML)
+           
+                 currentNode++
+                  }, 1000)
+              } catch(e) {
+                    return
+              }
+              
+             
+          }, 3000)
+          
+          setInterval(() => {
+              if(turn == false) {
+              if(inner1.length == 1) {
+                  changed()
+                  turn = true
+              }     
+              }
+             
+              if(inner1.length == 2) {
+                      changed()
+                      inner1.length = 1   
+              }
+          }, 100)
+          
+          function changed() {
+              try{
+             let get = document.querySelector("#videodetay > div > div:nth-child(4)")
+                 let nodes = get.childNodes
+                let curPlayers = []
+          
+              nodes.forEach(el => {
+                curPlayers.push(el.innerText.toLowerCase())
+              })
+                res.push({
+                    subName: nodes1[currentNode-1].innerText.toLowerCase(),
+                    players: curPlayers
+                })
+                      } catch(e2) {
+                         
+                      }
+          }
+
+          setInterval(() => {
+            if(res.length == nodes1.length) {
+                resolve(res)
+            }
+        }, 100)
+      })
+    })
+  }  
+
+  
+  boxes2 = await getData();
+  console.log(boxes2)
+
+
       }, 3000);
     }
 
