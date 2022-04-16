@@ -18,8 +18,8 @@ function startEverything(link) {
         headless: false,
         executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
         args: [
-          `--disable-extensions-except=C:\\Users\\Asus\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cjpalhdlnbpafiamejdnhcphjbkeiagm\\1.41.8_0`,
-          `--load-extension=C:\\Users\\Asus\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cjpalhdlnbpafiamejdnhcphjbkeiagm\\1.41.8_0`,
+          `--disable-extensions-except=C:\\Users\\Asus\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cjpalhdlnbpafiamejdnhcphjbkeiagm\\1.42.4_0`,
+          `--load-extension=C:\\Users\\Asus\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cjpalhdlnbpafiamejdnhcphjbkeiagm\\1.42.4_0`,
         ]
       })
       setTimeout(async () => {
@@ -123,10 +123,10 @@ function startEverything(link) {
                 let curPlayers = []
           
               nodes.forEach(el => {
-                curPlayers.push(el.innerText.toLowerCase())
+                curPlayers.push(el.innerText.toLowerCase().trim())
               })
                 res.push({
-                    subName: nodes1[currentNode-1].innerText.toLowerCase(),
+                    subName: nodes1[currentNode-1].innerText.toLowerCase().trim(),
                     players: curPlayers
                 })
                       } catch(e2) {
@@ -145,7 +145,13 @@ function startEverything(link) {
 
   
   boxes2 = await getData();
-  console.log(boxes2)
+  let filterIt = boxes2.filter(x => x.players.includes("fembed") || x.players.includes("hdvid") || x.players.includes("anavids"))
+  let index = boxes2.indexOf(filterIt[0])
+  await page.evaluate(async(index) => {
+    let select = document.querySelector(`#videodetay > div > div.btn-group.pull-right > button:nth-child(${index+1})`)
+    select.click()
+  }, index)
+  console.log(filterIt)
 
 
       }, 3000);
