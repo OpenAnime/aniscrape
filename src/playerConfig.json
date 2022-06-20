@@ -1,0 +1,43 @@
+{
+ "players": [
+  {
+   "name": "anavids",
+   "isRedirectingRequired": false,
+   "isParsingRequired": false,
+   "useDefURL": true
+  },
+  {
+   "name": "hdvid",
+   "isRedirectingRequired": false,
+   "isParsingRequired": false,
+   "useDefURL": true
+  },
+  {
+   "name": "sibnet",
+   "isRedirectingRequired": true,
+   "isParsingRequired":false,
+   "useDefURL": false,
+   "selector": "#video_html5_wrapper > div.vjs-big-play-button"
+  },
+  {
+   "name": "fembed",
+   "isRedirectingRequired":true,
+   "isParsingRequired":false,
+   "useDefURL": true,
+   "selector": "#loading > div"
+  },
+  {
+   "name": "streamzz",
+   "isRedirectingRequired":true,
+   "isParsingRequired":false,
+   "useDefURL": true,
+   "selector": "#video_1 > button"
+  },
+  {
+   "name": "hdvid",
+   "isRedirectingRequired":false,
+   "isParsingRequired":true,
+   "useDefURL":true
+  }
+ ]
+}

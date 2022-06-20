@@ -1,0 +1,14 @@
+{
+  "name": "aniscrape",
+  "version": "1.0.0",
+  "description": "A tool to automaticly download anime videos from AnimeciX and Turk Anime TV",
+  "main": "./src/Scraper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Constani Developer Team",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer-core": "^14.4.1"
+  }
+}
