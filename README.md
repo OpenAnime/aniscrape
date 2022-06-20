@@ -23,7 +23,7 @@ Just clone the repository and open a terminal in the repository folder then type
 
 ```js
 const { Scraper } = require("./src/Scraper")
-let scraper = Scraper({
+let scraper = new Scraper({
  useAdBlocker: true,
  adBlockerPath: "C:\\Users\\Asus\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cjpalhdlnbpafiamejdnhcphjbkeiagm\\1.43.0_3",
  browserPath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
