@@ -22,8 +22,8 @@ Just clone the repository and open a terminal in the repository folder then type
 `Creating a new scraping session and listen for responses`
 
 ```js
-const reqScraper = require("./src/Scraper")
-let scraper = new reqScraper.Scraper({
+const Scraper = require("./src/Scraper")
+let scraper = new Scraper.Scraper({
  useAdBlocker: true,
  adBlockerPath: "C:\\Users\\Asus\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cjpalhdlnbpafiamejdnhcphjbkeiagm\\1.43.0_3",
  browserPath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
