@@ -2,6 +2,7 @@ const absoluteURLs = ["animecix.net", "www.turkanime.co"]
 const puppeteer = require("puppeteer-core")
 const universalControllers = require("./Universal-Controllers")
 const turkanimetv = require("./TurkAnimeTV-Controllers")
+const AnimeciXControllers = require("./AnimeciX-Controllers")
 let EventEmitter = require('node:events').EventEmitter
 
 class Scraper extends EventEmitter {
@@ -83,6 +84,10 @@ class Scraper extends EventEmitter {
         })
 
         if (url.includes("animecix")) {
+          AnimeciXControllers.searchVideo(this.browser, page)
+          AnimeciXControllers.Events.on("gotURL", (data) => {
+            this.emit("gotURL", data)
+          })
           //later to be implemented
         } else { //otherwise it is turkanimetv
           await page.evaluate(() => {
@@ -114,6 +119,7 @@ class Scraper extends EventEmitter {
   }
 
   terminateSession() {
+    AnimeciXControllers.ended = true
     this.browser.close()
   }
 }

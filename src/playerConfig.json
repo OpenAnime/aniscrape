@@ -38,6 +38,18 @@
    "isRedirectingRequired":false,
    "isParsingRequired":true,
    "useDefURL":true
+  },
+  {
+   "name": "google drive",
+   "isRedirectingRequired": false,
+   "isParsingRequired": true,
+   "useDefURL": true
+  },
+  {
+   "name": "gdrive",
+   "isRedirectingRequired": false,
+   "isParsingRequired": true,
+   "useDefURL": true   
   }
  ]
 }
