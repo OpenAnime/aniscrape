@@ -117,7 +117,9 @@ class Scraper extends EventEmitter {
       throw new Error(`Only ${absoluteURLs.join(", ")} domains are currently supported`)
     }
   }
-
+    /**
+   * Terminates the current web scraping session.
+   */
   terminateSession() {
     AnimeciXControllers.ended = true
     this.browser.close()

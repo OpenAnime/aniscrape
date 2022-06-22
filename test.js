@@ -8,7 +8,6 @@ let scraper = new Scraper({
 scraper.scrape("https://animecix.net/titles/9867/season/1/episode/11")
 
 
-
 function listen() {
  scraper.on("gotURL", (data) => {
   console.log(data)
