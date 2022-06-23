@@ -5,8 +5,7 @@ let scraper = new Scraper({
  browserPath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
  headless: false
 })
-scraper.scrape("https://animecix.net/titles/9867/season/1/episode/11")
-
+scraper.scrape("https://www.turkanime.co/video/haikyuu-ii-23-bolum")
 
 function listen() {
  scraper.on("gotURL", (data) => {
@@ -19,7 +18,7 @@ function listen() {
    headless: false
   })
   setTimeout(() => {
-   scraper.scrape("https://animecix.net/titles/9867/season/1/episode/11")     
+   scraper.scrape("https://www.turkanime.co/video/haikyuu-ii-23-bolum")     
    listen()
   }, 2000);
  })

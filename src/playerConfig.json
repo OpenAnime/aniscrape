@@ -44,12 +44,6 @@
    "isRedirectingRequired": false,
    "isParsingRequired": true,
    "useDefURL": true
-  },
-  {
-   "name": "gdrive",
-   "isRedirectingRequired": false,
-   "isParsingRequired": true,
-   "useDefURL": true   
   }
  ]
 }

@@ -1,70 +1,130 @@
 const playerButtonsHolder = `#videodetay > div > div:nth-child(4)`
-let navigated = false;
 const config = require("./playerConfig.json");
 let EventEmitter = require('node:events').EventEmitter
-let mainEvent = new EventEmitter()
 
 const UniversalControllers = require("./Universal-Controllers");
 module.exports = {
- Events: mainEvent,
+ Events: new EventEmitter(),
+ ended: false,
  async searchVideo(browser, page) {
-  await page.exposeFunction('caught', async (data) => {
-   if (data.mode !== "direct") { //if it is an iframe
-    let newPage = await browser.newPage()
-    await newPage.goto(data.url, {
-     waitUntil: 'networkidle0'
-    })
-    navigated = true;
-    await newPage.waitForSelector(data.selector)
-    await newPage.setRequestInterception(true)
-    UniversalControllers.trackRequests(newPage).then(req => {
-     if (typeof req === "string") {
-      mainEvent.emit("gotURL", req)
-     }
-     newPage.close() //close the current iframe page
-     navigated = false
-    })
-    await newPage.evaluate((data) => {
-     document.querySelector(data.selector).click()
-    }, data)
-   } else { //otherwise it is a direct url of the mp4 file
-    if (typeof req === "string") {
-     mainEvent.emit("gotURL", req)
-    }
-   }
-  });
+  this.Events = new EventEmitter() //re-init the event emitter for working with recursive functions
+  this.ended = false;
+  let currentFansub = 1
+  let selector = `#videodetay > div > div.pull-right`
+  let currentPlayers = []
+  let index = 0
+  let iframe;
+  let playSelect;
 
-  await page.evaluate((playerButtonsHolder, navigated, config) => {
-   let currentButton = 1
-   setInterval(async () => {
-    if (currentButton > document.querySelector(playerButtonsHolder).childNodes.length) return
-    if (navigated == true) return
-    const button = document.querySelector(playerButtonsHolder + ` > button:nth-child(${currentButton})`)
-    button.click()
-    let find = config.players.find(x => button.innerHTML.toLowerCase().includes(x.name))
-    if (find !== undefined) {
-     if (find.isRedirectingRequired == true) {
-      setTimeout(() => {
-       let iframeURL = document.querySelector(".video-icerik > iframe").contentWindow.document.querySelector("#iframe-container").childNodes[0].src
-       window.caught({
-        "url": iframeURL,
-        "selector": find.selector,
-        "mode": "iframe"
-       })
-      }, 3000);
-     } else if (find.isParsingRequired == false) { //means all of the iframes has the same domain
-      //prob just hdvid uses that
-      setTimeout(() => {
-       let directURL = document.querySelector(".video-icerik > iframe").contentWindow.document.querySelector("#iframe-container").childNodes[0].contentWindow.document.querySelector("#player > div.jw-wrapper.jw-reset > div.jw-media.jw-reset > video")
-       window.caught({
-        "url": directURL,
-        "mode": "direct"
-       })
-      }, 3000);
-     }
+
+  var getMP4 = (function() {
+    return new Promise(async (resolve) => {
+      if(playSelect !== undefined && playSelect !== null && iframe !== undefined) {
+        if(iframe.startsWith("https://www.turkanime.co/player/")) {
+        resolve("ok")
+        } else {
+          let newPage = await browser.newPage()
+          await newPage.goto(iframe, {
+           waitUntil: 'networkidle0'
+          })
+          await newPage.waitForSelector(playSelect)
+          await newPage.setRequestInterception(true)
+          UniversalControllers.trackRequests(newPage).then(async (req) => {
+           if (typeof req === "string") {
+            this.Events.emit("gotURL", req)
+           }
+           if (this.ended == true) return
+           newPage.close() //close the current iframe tab  
+           resolve("ok")
+          })
+          await newPage.evaluate((playSelect) => {
+           document.querySelector(playSelect).click()
+          }, playSelect)
+        }
+      } else {
+        UniversalControllers.trackRequests(page).then(async(req) => {
+          if(typeof req === "string") {
+            this.Events.emit("gotURL", req)
+            resolve("ok")
+          }
+        })
+      }
+    })
+  }).bind(this)
+
+  await page.exposeFunction("command", async(data) => {
+    if(data.mode == "setPlayers") {
+      currentPlayers = data.players
+      currentFansub++
+      let checkSupportedPlayers = currentPlayers.filter(x => config.players.some(y => y.name == x))
+      if(checkSupportedPlayers !== undefined && checkSupportedPlayers.length > 0) {
+        async function fivesecrec() {
+          if(index == checkSupportedPlayers.length) {
+            index = 0
+            clickCurrentFansub()
+            return;
+          }
+          let currentPlayer = checkSupportedPlayers[index]
+          let getNumber = currentPlayers.indexOf(currentPlayer)+1
+          let find2 =  config.players.find(x => x.name == currentPlayer)
+          if(Object.keys(find2).includes("selector")) {
+            playSelect = find2.selector
+          }
+          await page.evaluate((getNumber) => {
+            document.querySelector(`#videodetay > div > div:nth-child(4) > button:nth-child(${getNumber})`).click()
+            setTimeout(() => {
+              window.command({
+                "mode": "setframe",
+                "frame": document.querySelector("#videodetay > div > div.video-icerik > iframe").contentWindow.document.querySelector("#iframe-container > iframe").src
+              })
+            }, 2000);
+          }, getNumber)
+          setTimeout(() => {
+            getMP4().then(() => {
+              index++
+              fivesecrec()
+            })
+          }, 3000);
+        }
+        fivesecrec()
+      } else {
+        index = 0
+        currentPlayers = []
+        clickCurrentFansub()
+      }
+    } else if(data.mode == "setframe") {
+      iframe = data.frame
     }
-    currentButton++
-   }, 10000);
-  }, playerButtonsHolder, navigated, config)
+  })
+ 
+
+  async function clickCurrentFansub() {
+    await page.waitForSelector(selector).then(async() => {
+      try{
+        await page.evaluate((selector, currentFansub) => {
+          document.querySelector(selector + ` > button:nth-child(${currentFansub})`).click()
+        }, selector, currentFansub)
+      } catch(e) {
+        //means there is no fansub to navigate to so we should stop the search process 
+        this.ended = true;
+      }
+      setTimeout(async() => {
+        selector = `#videodetay > div > div.btn-group.pull-right`
+        await page.waitForSelector("#videodetay > div > div:nth-child(4)").then(async() => {
+          await page.evaluate(() => {
+            let els = []
+            document.querySelector("#videodetay > div > div:nth-child(4)").childNodes.forEach(el => {
+              els.push(el.innerText.trim().toLowerCase())
+            })
+            window.command({
+              "mode": "setPlayers",
+              "players": els
+            })
+          })
+        })
+      }, 2000)
+    })   
+  }
+  clickCurrentFansub()
  }
 }

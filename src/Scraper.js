@@ -88,30 +88,16 @@ class Scraper extends EventEmitter {
           AnimeciXControllers.Events.on("gotURL", (data) => {
             this.emit("gotURL", data)
           })
-          //later to be implemented
         } else { //otherwise it is turkanimetv
-          await page.evaluate(() => {
-            console.clear = () => {} //orospu evlatları konsolu temizleyip durmasın diye ya bre amınakoduklrım devtools açıyorum bakıcam konsola SİLMESENİZE ŞU AMINASOKTUĞUMUN KONSOLUNU
-            try {
-              document.querySelector(`#videodetay > div > div.pull-right`).childNodes[0].click() //click the first fansub
-            } catch (e) {
-              document.querySelector(`#videodetay > div > div.btn-group.pull-right`).childNodes[0].click() //click the first fansub
-            }
-          })
-
-          await page.waitForSelector(".video-icerik").then(() => { //fires when video div is loaded
             turkanimetv.searchVideo(this.browser, page)
             turkanimetv.Events.on("gotURL", (data) => {
               this.emit("gotURL", data)
             })
-          })
-        }
+          }
 
         await page.setRequestInterception(true)
 
-        universalControllers.trackRequests(page).then((response) => { //fires when video file is caught in the network tab
-          this.emit("gotURL", response)
-        })
+        universalControllers.trackRequests(page) //just continue the request
       }, 2000);
     } else {
       throw new Error(`Only ${absoluteURLs.join(", ")} domains are currently supported`)
@@ -122,6 +108,7 @@ class Scraper extends EventEmitter {
    */
   terminateSession() {
     AnimeciXControllers.ended = true
+    turkanimetv.ended = true
     this.browser.close()
   }
 }
