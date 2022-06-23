@@ -52,6 +52,7 @@ test.js file has an example with that situation.
 
 <table>
   <tr>
-        <td align="center"><a href="https://spongebed.me"><img src="https://avatars.githubusercontent.com/u/56435044?v=4" width="100px;" alt=""/><br /><sub>          <b>SpongeBed</b></sub></a><br /> <a href="https://github.com/Constani/aniscrape/commits?author=SpongeBed81" title="Code">💻</a></td>
+        <td align="center"><a href="https://spongebed.me"><img src="https://avatars.githubusercontent.com/u/56435044?v=4" width="100px;" alt=""/><br /><sub>                     <b>SpongeBed</b></sub></a><br /> <a href="https://github.com/Constani/aniscrape/commits?author=SpongeBed81" title="Code">💻</a></td>
+            <td align="center"><a href="https://spongebed.me"><img src="https://avatars.githubusercontent.com/u/93868975?v=4" width="100px;" alt=""/><br /><sub>                     <b>Kax675</b></sub></a><br /> <a href="https://github.com/Constani/aniscrape/commits?author=Kax675" title="Code">💻</a></td>
     </tr>
 </table>
