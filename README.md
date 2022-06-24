@@ -48,6 +48,14 @@ scraper.terminateSession()
 test.js file has an example with that situation.
 ```
 
+`Watch for web scraping process to finish`
+
+```js
+scraper.on("finished", () => {
+  //your code
+})
+```
+
 ## Contributors ✨
 
 <table>

@@ -44,6 +44,7 @@ module.exports = {
     }, data)
    } else if (data.mode == "end") {
     this.ended = true;
+    this.Events.emit("finished")
    } else if (data.mode == "direct") {
     this.Events.emit("gotURL", data.url)
     navigated = false

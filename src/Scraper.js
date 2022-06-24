@@ -88,10 +88,16 @@ class Scraper extends EventEmitter {
           AnimeciXControllers.Events.on("gotURL", (data) => {
             this.emit("gotURL", data)
           })
+          AnimeciXControllers.Events.on("finished", () => {
+            this.emit("finished")
+          })
         } else { //otherwise it is turkanimetv
             turkanimetv.searchVideo(this.browser, page)
             turkanimetv.Events.on("gotURL", (data) => {
               this.emit("gotURL", data)
+            })
+            turkanimetv.Events.on("finished", () => {
+              this.emit("finished")
             })
           }
 

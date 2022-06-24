@@ -98,7 +98,7 @@ module.exports = {
   })
  
 
-  async function clickCurrentFansub() {
+  var clickCurrentFansub = (async function() {
     await page.waitForSelector(selector).then(async() => {
       try{
         await page.evaluate((selector, currentFansub) => {
@@ -106,6 +106,9 @@ module.exports = {
         }, selector, currentFansub)
       } catch(e) {
         //means there is no fansub to navigate to so we should stop the search process 
+        if(this.ended == false) {
+          this.Events.emit("finished")
+        }
         this.ended = true;
       }
       setTimeout(async() => {
@@ -124,7 +127,7 @@ module.exports = {
         })
       }, 2000)
     })   
-  }
+  }).bind(this)
   clickCurrentFansub()
  }
 }
